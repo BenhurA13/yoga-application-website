@@ -1,0 +1,45 @@
+Creating clients table
+create table clients
+	  (id int auto_increment primary key,
+	  name varchar(20) not null,
+	  pin varchar(8),
+	  balance decimal(8,2) DEFAULT 0,
+	  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+
+(test if the tables were created by using: “show tables;” and “describe clients;”)
+—-----------------------------------------------------------------------------------
+Creating client view and data
+create view clientView as select name, balance from clients;
+insert into clients (name, pin) values ('Scott', '1234');
+insert into clients (name, pin) values ('Mary', '93332');
+insert into clients (name, pin) values ('Deepak', '2222');
+update clients set balance = 300 where name = 'Deepak';
+
+(test by using: “select * from clients;” and “select * from clientView;”)
+—-----------------------------------------------------------------------------------
+Creating the check-in table
+create  table classCheckin
+	  (clientid int,
+	  checkindate TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+
+(test by using: select * from classCheckin;”)
+—-----------------------------------------------------------------------------------
+
+Creating limited user
+create user 'yogauser'@'localhost' identified by 'SomeStrongPassword';
+GRANT SELECT ON yoga.clientView to 'yogauser'@'localhost';
+GRANT EXECUTE ON PROCEDURE yoga.CheckIn TO 'yogauser'@'localhost';
+
+(test by using: “call CheckIn(‘Lusy’, ‘1234’);”)
+—-----------------------------------------------------------------------------------
+Testing limited user
+mysql -u yogauser -p
+(and then testing limited privileges:)
+use yoga;
+show tables;
+describe clientView;
+select * from clientView;
+call CheckIn(’Mary’, ’93332’);
+select * from clientView;
+
+
